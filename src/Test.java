@@ -302,24 +302,28 @@ public class Test extends JFrame implements ActionListener {
 	public boolean judge(ArrayList<Integer> checkLabel, String[] fileLabel) {
 		int num = 0;
 		boolean flag = false;
-		if (checkLabel.size() > fileLabel.length) {
+		if (fileLabel[0].equals("")&&checkLabel.size()>0) {
 			flag = false;
 		} else {
-			for (int i = 0; i < checkLabel.size(); i++) {
-				for (int j = 0; j < fileLabel.length; j++) {
-					boolean equal = checkLabel.get(i).equals(
-							Integer.valueOf(fileLabel[j]));
-					if (equal) {
-						num += 1;
-						break;
+			if (checkLabel.size() > fileLabel.length) {
+				flag = false;
+			} else {
+				for (int i = 0; i < checkLabel.size(); i++) {
+					for (int j = 0; j < fileLabel.length; j++) {
+						boolean equal = checkLabel.get(i).equals(
+								Integer.valueOf(fileLabel[j]));
+						if (equal) {
+							num += 1;
+							break;
+						}
 					}
 				}
-			}
 
-			if (num == checkLabel.size()) {
-				flag = true;
-			} else {
-				flag = false;
+				if (num == checkLabel.size()) {
+					flag = true;
+				} else {
+					flag = false;
+				}
 			}
 		}
 		return flag;

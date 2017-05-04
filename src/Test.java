@@ -115,39 +115,52 @@ public class Test extends JFrame implements ActionListener {
 				JOptionPane.showMessageDialog(null, "请输入内容~", "错误",
 						JOptionPane.ERROR_MESSAGE);
 				txtInput.grabFocus();
-			} else {
+			} else
 				try {
-					write(txtInput.getText(), "D:\\1\\content.txt");
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
-				try {
-					txtRecentOfContent
-							.setText(recentOfContent("D:\\1\\content.txt"));
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-				try {
-					insertLabel(fileOfLabel);
-				} catch (Exception e2) {
-					e2.printStackTrace();
-				}
-				txtInput.setText("");
-				try {
-					checkBoxLayout();
-				} catch (Exception e1) {
-					e1.printStackTrace();
-				}
+					if(checkRepeat()) {				
+						JOptionPane.showMessageDialog(null, "输入的内容已存在", "错误",
+								JOptionPane.ERROR_MESSAGE);
+						txtInput.grabFocus();
+						fileOfLabel.clear();
+					}
+					else{
+						try {
+							write(txtInput.getText(), "D:\\1\\content.txt");
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						try {
+							txtRecentOfContent
+									.setText(recentOfContent("D:\\1\\content.txt"));
+						} catch (Exception e2) {
+							e2.printStackTrace();
+						}
+						try {
+							insertLabel(fileOfLabel);
+						} catch (Exception e2) {
+							e2.printStackTrace();
+						}
+						txtInput.setText("");
+						try {
+							checkBoxLayout();
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
 
-				try {
-					writeRelationship(contentLabelList(fileOfLabel));
-				} catch (IOException e1) {
+						try {
+							writeRelationship(contentLabelList(fileOfLabel));
+						} catch (IOException e1) {
+							e1.printStackTrace();
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
+						fileOfLabel.clear();
+					}
+				} catch (HeadlessException e1) {
 					e1.printStackTrace();
 				} catch (Exception e1) {
 					e1.printStackTrace();
 				}
-				fileOfLabel.clear();
-			}
 		}
 		if (e.getSource() == btnRequest) {
 			if (txtRequest.getText().equals("")) {
@@ -361,6 +374,18 @@ public class Test extends JFrame implements ActionListener {
 			}
 			checkLabel.clear();
 		}
+	}
+	
+	public boolean checkRepeat() throws Exception{
+		boolean flag=false;
+		int num=numberOfLine("D:\\1\\content.txt");
+		for(int i=1;i<=num;i++){
+			if(txtInput.getText().equals(readLine(i,"D:\\1\\content.txt"))){
+				flag=true;
+				break;
+			}			
+		}
+		return flag;
 	}
 
 }

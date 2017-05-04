@@ -14,10 +14,12 @@ public class Test extends JFrame implements ActionListener {
 	private JButton btnConfirm;
 	private JButton btnRequest;
 	private JButton btnAddLabel;
+	private JButton btnDelete;
 	private JTextArea txtRecentOfContent;
 	private JTextArea txtRequestContent;
 	ArrayList<String> fileOfLabel = new ArrayList<String>();
 	ArrayList<String> checkLabel = new ArrayList<String>();
+	private JTextField txtDelete;
 
 	/**
 	 * Launch the application.
@@ -43,7 +45,7 @@ public class Test extends JFrame implements ActionListener {
 	public Test() throws Exception {
 		setTitle("\u77E5\u8BC6\u5E93\u7BA1\u7406\u8F6F\u4EF6");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 613, 456);
+		setBounds(100, 100, 613, 497);
 		getContentPane().setLayout(null);
 
 		JLabel lblEntry = new JLabel("\u5F55\u5165");
@@ -78,12 +80,12 @@ public class Test extends JFrame implements ActionListener {
 
 		txtRecentOfContent = new JTextArea();
 		txtRecentOfContent.setEditable(false);
-		txtRecentOfContent.setBounds(14, 133, 269, 249);
+		txtRecentOfContent.setBounds(14, 133, 269, 304);
 		getContentPane().add(txtRecentOfContent);
 
 		txtRequestContent = new JTextArea();
 		txtRequestContent.setEditable(false);
-		txtRequestContent.setBounds(309, 254, 269, 128);
+		txtRequestContent.setBounds(311, 278, 269, 128);
 		getContentPane().add(txtRequestContent);
 
 		txtAddLabel = new JTextField();
@@ -96,6 +98,17 @@ public class Test extends JFrame implements ActionListener {
 		btnAddLabel.setBounds(189, 87, 93, 33);
 		getContentPane().add(btnAddLabel);
 		txtRecentOfContent.setText(recentOfContent("D:\\1\\content.txt"));
+		
+		txtDelete = new JTextField();
+		txtDelete.setBounds(309, 410, 198, 27);
+		getContentPane().add(txtDelete);
+		txtDelete.setColumns(10);
+		
+		btnDelete = new JButton("\u5220\u9664");
+		btnDelete.addActionListener(this);
+		btnDelete.setBounds(507, 410, 71, 27);
+		getContentPane().add(btnDelete);
+		
 		checkBoxLayout();
 	}
 
@@ -117,13 +130,12 @@ public class Test extends JFrame implements ActionListener {
 				txtInput.grabFocus();
 			} else
 				try {
-					if(checkRepeat()) {				
+					if (checkRepeat()) {
 						JOptionPane.showMessageDialog(null, "输入的内容已存在", "错误",
 								JOptionPane.ERROR_MESSAGE);
 						txtInput.grabFocus();
 						fileOfLabel.clear();
-					}
-					else{
+					} else {
 						try {
 							write(txtInput.getText(), "D:\\1\\content.txt");
 						} catch (Exception e1) {
@@ -182,6 +194,25 @@ public class Test extends JFrame implements ActionListener {
 				}
 			}
 
+		}
+		if(e.getSource()==btnDelete){
+			if(txtDelete.getText().equals("")){
+				JOptionPane.showMessageDialog(null, "请输入要删除内容~", "错误",
+						JOptionPane.ERROR_MESSAGE);
+				txtDelete.grabFocus();}
+			else{
+				try {
+					delete();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+				try {
+					txtRecentOfContent
+					.setText(recentOfContent("D:\\1\\content.txt"));
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -315,7 +346,7 @@ public class Test extends JFrame implements ActionListener {
 	public boolean judge(ArrayList<Integer> checkLabel, String[] fileLabel) {
 		int num = 0;
 		boolean flag = false;
-		if (fileLabel[0].equals("")&&checkLabel.size()>0) {
+		if (fileLabel[0].equals("") && checkLabel.size() > 0) {
 			flag = false;
 		} else {
 			if (checkLabel.size() > fileLabel.length) {
@@ -375,17 +406,60 @@ public class Test extends JFrame implements ActionListener {
 			checkLabel.clear();
 		}
 	}
-	
-	public boolean checkRepeat() throws Exception{
-		boolean flag=false;
-		int num=numberOfLine("D:\\1\\content.txt");
-		for(int i=1;i<=num;i++){
-			if(txtInput.getText().equals(readLine(i,"D:\\1\\content.txt"))){
-				flag=true;
+
+	public boolean checkRepeat() throws Exception {
+		boolean flag = false;
+		int num = numberOfLine("D:\\1\\content.txt");
+		for (int i = 1; i <= num; i++) {
+			if (txtInput.getText().equals(readLine(i, "D:\\1\\content.txt"))) {
+				flag = true;
 				break;
-			}			
+			}
 		}
 		return flag;
 	}
-
+    
+	public void delete() throws Exception{
+		boolean flag=false;
+		   String contentOfDelete=txtDelete.getText();
+		   int index = 0,i;
+		   int num=numberOfLine("D:\\1\\content.txt");
+		   for(i=1;i<=num;i++){
+			   if(contentOfDelete.equals(readLine(i,"D:\\1\\content.txt"))){
+				   flag=true;
+				   index=i;
+				   break;
+			   }
+		   }
+		   if(flag==false){
+			   JOptionPane.showMessageDialog(null, "系统内不存在要删除的内容", "错误",
+						JOptionPane.ERROR_MESSAGE);
+				txtDelete.grabFocus();
+		   }
+		   else{
+			   ArrayList<String> deleteContent=new ArrayList<String>();
+			   ArrayList<String> deleteRelationship=new ArrayList<String>();
+			   for(i=1;i<=num;i++){
+				   deleteContent.add(readLine(i,"D:\\1\\content.txt"));
+				   deleteRelationship.add(readLine(i,"D:\\1\\relationship.txt"));
+			   }
+			   deleteContent.remove(index-1);
+			   deleteRelationship.remove(index-1);
+			   File content=new File("D:\\1\\content.txt");
+			   File relationship=new File("D:\\1\\relationship.txt");
+			   content.delete();
+			   relationship.delete();
+			   content.createNewFile();
+			   relationship.createNewFile();
+			   for(i=0;i<deleteContent.size();i++){
+				   write(deleteContent.get(i),"D:\\1\\content.txt");
+				   write(deleteRelationship.get(i),"D:\\1\\relationship.txt");
+			   }
+			   JOptionPane.showMessageDialog(null, "删除成功", "正确",
+						JOptionPane.PLAIN_MESSAGE);
+			   deleteContent.clear();
+			   deleteRelationship.clear();
+		   }
+		   txtDelete.setText("");
+	}
 }

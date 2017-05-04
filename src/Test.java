@@ -215,7 +215,12 @@ public class Test extends JFrame implements ActionListener {
 			}
 		}
 	}
-
+	/**
+	 * 该方法为文件内写入需要写的内容
+	 * @param content [写入文件的内容]
+	 * @param fileName [文件的名字]
+	 * @throws Exception
+	 */
 	public void write(String content, String fileName) throws Exception {
 		BufferedWriter writeContent = new BufferedWriter(new FileWriter(
 				fileName, true));
@@ -223,7 +228,13 @@ public class Test extends JFrame implements ActionListener {
 		writeContent.newLine();
 		writeContent.close();
 	}
-
+	/**
+	 * 该方法读出文件内确定的某行内容
+	 * @param lineNumber [需要读的某行的行数]
+	 * @param fileName [文件的名字]
+	 * @return [方法返回读出的内容]
+	 * @throws Exception
+	 */
 	public String readLine(int lineNumber, String fileName) throws Exception {
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
 		String s = "";
@@ -238,7 +249,12 @@ public class Test extends JFrame implements ActionListener {
 		read.close();
 		return s;
 	}
-
+	/**
+	 * 该方法计算文件的行数
+	 * @param fileName [需要读取的文件的名字]
+	 * @return [该方法返回文件的行数]
+	 * @throws Exception
+	 */
 	public int numberOfLine(String fileName) throws Exception {
 		BufferedReader read = new BufferedReader(new FileReader(fileName));
 		int line = 0;
@@ -250,7 +266,12 @@ public class Test extends JFrame implements ActionListener {
 		read.close();
 		return line;
 	}
-
+	/**
+	 * 该方法读取存内容的所有内容
+	 * @param fileName [文件的名字]
+	 * @return [返回内容文件的所有内容]
+	 * @throws Exception
+	 */
 	public String recentOfContent(String fileName) throws Exception {
 		String recentContent = "";
 		for (int i = numberOfLine(fileName); i > 0; i--) {
@@ -258,7 +279,11 @@ public class Test extends JFrame implements ActionListener {
 		}
 		return recentContent;
 	}
-
+	/**
+	 * 该方法将输入的标签写入的标签文件
+	 * @param fileOfLabel [输入的标签数组]
+	 * @throws Exception
+	 */
 	public void insertLabel(ArrayList<String> fileOfLabel) throws Exception {
 		boolean flag = false;
 		int i = 0;
@@ -284,7 +309,10 @@ public class Test extends JFrame implements ActionListener {
 			}
 		}
 	}
-
+	/**
+	 * 该方法给checkbox布局，有多少个标签对应多少个checkbox
+	 * @throws Exception
+	 */
 	public void checkBoxLayout() throws Exception {
 		Map<String, JCheckBox> radioMap = new HashMap<String, JCheckBox>();
 		for (int i = 0; i < numberOfLine("D:\\1\\label.txt"); i++) {
@@ -302,7 +330,12 @@ public class Test extends JFrame implements ActionListener {
 			getContentPane().add(radioMap.get("a" + i));
 		}
 	}
-
+	/**
+	 * 该方法得到一个标签在标签文件的序列号
+	 * @param label [需要查的标签]
+	 * @return [返回需要查的标签的序列号]
+	 * @throws Exception
+	 */
 	public int getLabelIndex(String label) throws Exception {
 		int Index = 0;
 		int num = numberOfLine("D:\\1\\label.txt");
@@ -314,7 +347,12 @@ public class Test extends JFrame implements ActionListener {
 		}
 		return Index;
 	}
-
+	/**
+	 * 该方法将输入的标签存到数组内将重复的标签去掉
+	 * @param fileOfLabel [输入的标签数组]
+	 * @return [返回没有重复标签的数组]
+	 * @throws Exception
+	 */
 	public ArrayList<Integer> contentLabelList(ArrayList<String> fileOfLabel)
 			throws Exception {
 		ArrayList<Integer> list = new ArrayList<Integer>();
@@ -324,7 +362,11 @@ public class Test extends JFrame implements ActionListener {
 		Collections.sort(list);
 		return list;
 	}
-
+	/**
+	 * 该方法将内容与标签的关系写入关系文件内
+	 * @param contentLabelList
+	 * @throws IOException
+	 */
 	public void writeRelationship(ArrayList<Integer> contentLabelList)
 			throws IOException {
 		BufferedWriter writeRelationship = new BufferedWriter(new FileWriter(
@@ -336,13 +378,22 @@ public class Test extends JFrame implements ActionListener {
 		writeRelationship.newLine();
 		writeRelationship.close();
 	}
-
+	/**
+	 * 该方法读取关系文件内的关系
+	 * @param receiveRelationship
+	 * @return
+	 */
 	public String[] readRelationship(String receiveRelationship) {
 		String[] relationship;
 		relationship = receiveRelationship.split(",");
 		return relationship;
 	}
-
+	/**
+	 * 该方法判断查询时所选的标签与对应的关系文件的关系是否匹配
+	 * @param checkLabel [查询时所选择的标签]
+	 * @param fileLabel [关系文件内对应的关系]
+	 * @return [匹配返回正确，反之不正确]
+	 */
 	public boolean judge(ArrayList<Integer> checkLabel, String[] fileLabel) {
 		int num = 0;
 		boolean flag = false;
@@ -372,7 +423,11 @@ public class Test extends JFrame implements ActionListener {
 		}
 		return flag;
 	}
-
+	/**
+	 * 该方法进行查询操作
+	 * @param contentLabelList [内容文件所有存储的内容]
+	 * @throws Exception
+	 */
 	public void request(ArrayList<Integer> contentLabelList) throws Exception {
 
 		boolean flag = false;
@@ -406,7 +461,11 @@ public class Test extends JFrame implements ActionListener {
 			checkLabel.clear();
 		}
 	}
-
+	/**
+	 * 该方法在录入时进行查重操作
+	 * @return [有重复返回true]
+	 * @throws Exception
+	 */
 	public boolean checkRepeat() throws Exception {
 		boolean flag = false;
 		int num = numberOfLine("D:\\1\\content.txt");
@@ -418,7 +477,10 @@ public class Test extends JFrame implements ActionListener {
 		}
 		return flag;
 	}
-    
+	/**
+	 * 该方法进行删除操作
+	 * @throws Exception
+	 */
 	public void delete() throws Exception{
 		boolean flag=false;
 		   String contentOfDelete=txtDelete.getText();
